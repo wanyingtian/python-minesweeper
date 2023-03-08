@@ -5,8 +5,8 @@ a simple minesweeper game GUI with tkinter
 ## Project Progress
 ### Completed
 - [x] Getting started with GUI: a simple tkinter window, with 3 frames (title, sidebar, main)
+- [x] Create cells and mines
 ### To-dos
-- [ ] Create cells and mines
 - [ ] Program minesweeper algorithms
 - [ ] Display game data
 - [ ] Extra touches
