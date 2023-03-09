@@ -13,7 +13,7 @@ a simple minesweeper game GUI with tkinter
 - [x] Getting started with GUI: a simple tkinter window, with 3 frames (title, sidebar, main)
 - [x] Create cells and mines
 - [x] Program minesweeper algorithms
-- - [x] Label each cell with identifiers
+  - [x] Label each cell with identifiers
 - - [x] Randomize mines
 - - [x] Label mine surrounding cells with counts
 - [ ] Display game data
