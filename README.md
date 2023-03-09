@@ -14,11 +14,11 @@ a simple minesweeper game GUI with tkinter
 - [x] Create cells and mines
 - [x] Program minesweeper algorithms
   - [x] Label each cell with identifiers
-- - [x] Randomize mines
-- - [x] Label mine surrounding cells with counts
+  - [x] Randomize mines
+  - [x] Label mine surrounding cells with counts
 - [ ] Display game data
-- - [ ] Display reactions after clicks
-- - [ ] Right-click Flags
-- - [ ] Show remaining cells
-- - [ ] Show timer
+  - [ ] Display reactions after clicks
+  - [ ] Right-click Flags
+  - [ ] Show remaining cells
+  - [ ] Show timer
 - [ ] Extra touches
