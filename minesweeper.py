@@ -46,11 +46,13 @@ Creating Cells and Mines
 Create a cell class in cell.py that can build cells with clickable buttons
 the cell button objects would also have actions when left or right clicked
 '''
-for x in range(settings.GRID_SIZE):
-    for y in range(settings.GRID_SIZE):
+for x in range(settings.BEGINNER_GRID_SIZE):
+    for y in range(settings.BEGINNER_GRID_SIZE):
         c = Cell(x, y)
         c.create_btn_object(center_frame)
         c.btn_object.grid(column = x, row = y) # notice grid(column and row) are used
+
+Cell.randomize_mines()
 
 # Run the window
 root.mainloop() 
