@@ -9,20 +9,26 @@ import utils
 
 class Cell:
     all = [] #a class attribute that will containn all objects
-    def __init__(self, x, y, is_mine = False):
+    #default beginner level
+    mine_count = 0
+    
+    def __init__(self, x, y, level, is_mine = False):
         self.is_mine = is_mine
         self.btn_object = None
         self.x = x
         self.y = y
-        
+       
+        Cell.level = level
+        Cell.mine_count = Cell.total_mine_count()
         #Append the object to the Cell.all list
         Cell.all.append(self)
-    
-    def create_btn_object(self, frame_location, grid_size = settings.BEGINNER_GRID_SIZE):
+
+    def create_btn_object(self, frame_location):
         btn = Button(
             frame_location,
-            width = self.btn_width(grid_size),
-            height = self.btn_height(grid_size),
+            relief = 'sunken',
+            width = 2,
+            height = 1
         )
         # assign event to the button
         btn.bind('<Button-1>', self.left_click_actions) #left click
@@ -41,7 +47,7 @@ class Cell:
         # interrupt the game and display that player lost
         self.btn_object.configure(
             bg = 'red',
-            text = "BOOM!",
+            text = "!",
             font = tkFont.Font(family='Helvetica', size=10, weight='bold')
             )
     
@@ -77,12 +83,12 @@ class Cell:
         return count
     
     def display_all_safe(self):
+        # display the safe neighbor cells when the clicked cell is 0
         for cell in self.surrounding_neighbors:
             cell.display_cell()
 
     def display_cell(self):
-        #display the number indicating number of mines surrounding the cell
-        
+        # display the number indicating number of mines surrounding the cell
         self.btn_object.configure(
             bg = 'grey',
             text = f"{self.surrounding_mine_count}",
@@ -93,20 +99,22 @@ class Cell:
         print(event)
         print('Right Clicked')
     
-    def btn_width(self, grid_size):
-        width = math.floor(utils.width_percentage(70) //  (8 * grid_size))
-        return width
-    
-    def btn_height(self, grid_size):
-        return math.floor(utils.height_percentage(70) // (18 * grid_size))
-    
+    @staticmethod
+    def total_mine_count():
+        if Cell.level == 0:
+            Cell.mine_count = settings.BEGINNER_MINES_COUNT
+        elif Cell.level == 1:
+            Cell.mine_count = settings.INTERMEDIATE_MINES_COUNT
+        elif Cell.level == 2:
+            Cell.mine_count = settings.EXPERT_MINES_COUNT
+        return Cell.mine_count
+
     @staticmethod #method belongs to the class not each individual instance
     def randomize_mines():
-        picked_cells = random.sample(Cell.all, settings.BEGINNER_MINES_COUNT)
+        picked_cells = random.sample(Cell.all, Cell.mine_count)
         for picked_cell in picked_cells:
             picked_cell.is_mine = True
         
-
     def __repr__(self):
         return f"Cell({self.x}, {self.y})"
     
