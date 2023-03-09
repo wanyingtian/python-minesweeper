@@ -21,7 +21,7 @@ top_frame = Frame(
     root,
     bg = 'brown',
     width = settings.WIDTH,
-    height = utils.height_percentage(25)
+    height = utils.height_percentage(20)
 )
 top_frame.place(x = 0, y = 0) # where the top left frame starts
 
@@ -29,17 +29,17 @@ left_frame = Frame(
     root,
     bg = 'tan',
     width= utils.width_percentage(20),
-    height = utils.height_percentage(75)    
+    height = utils.height_percentage(80)    
 )
-left_frame.place(x = 0, y = utils.height_percentage(25))
+left_frame.place(x = 0, y = utils.height_percentage(20))
 
 center_frame = Frame(
     root,
     bg = 'beige',
     width = utils.width_percentage(80),
-    height = utils.height_percentage(75)
+    height = utils.height_percentage(80)
 )
-center_frame.place(x = utils.width_percentage(20), y = utils.height_percentage(25))
+center_frame.place(x = utils.width_percentage(20), y = utils.height_percentage(20))
 
 '''
 Creating Cells and Mines
@@ -48,7 +48,7 @@ the cell button objects would also have actions when left or right clicked
 '''
 for x in range(settings.GRID_SIZE):
     for y in range(settings.GRID_SIZE):
-        c = Cell()
+        c = Cell(x, y)
         c.create_btn_object(center_frame)
         c.btn_object.grid(column = x, row = y) # notice grid(column and row) are used
 
