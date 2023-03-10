@@ -1,9 +1,13 @@
+from tkinter import *
 from tkinter import Button
 from tkinter import font as tkFont
+from tkinter import Label
+from tkinter import messagebox as tkMessageBox
 import random
-import math
 import settings
-import utils
+import ctypes
+import sys
+
 
 
 
@@ -11,15 +15,19 @@ class Cell:
     all = [] #a class attribute that will containn all objects
     #default beginner level
     mine_count = 0
-    
+    cell_count = 0
+
     def __init__(self, x, y, level, is_mine = False):
         self.is_mine = is_mine
+        self.is_clicked = False
+        self.is_flagged = False
         self.btn_object = None
         self.x = x
         self.y = y
        
         Cell.level = level
-        Cell.mine_count = Cell.total_mine_count()
+        Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
+        Cell.cell_count_lbl_object = None
         #Append the object to the Cell.all list
         Cell.all.append(self)
 
@@ -35,14 +43,48 @@ class Cell:
         btn.bind('<Button-3>', self.right_click_actions) # right click
         self.btn_object = btn
     
-    def left_click_actions(self, event):
-        if self.is_mine:
-            self.display_mine()
-        else:
-            if self.surrounding_mine_count == 0:
-                self.display_all_safe()
-            self.display_cell()
+    @staticmethod
+    def create_cell_count_label(frame_location):
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=12),
+            text = f"{Cell.cell_count} cells left"
+        )
+        Cell.cell_count_lbl_object = lbl
     
+    def left_click_actions(self, event):
+        if not self.is_clicked:
+            if self.is_mine:
+                self.display_mine()
+            else:
+                if self.surrounding_mine_count == 0:
+                    self.display_all_safe()
+                self.display_cell()
+
+                if Cell.cell_count == Cell.mine_count:
+                    #show game won
+                    #ctypes.windll.user32.MessageBoxW(0, 'You Won!', 'You Won', 0)
+                    self.game_over(True)
+        else:
+            self.unbind_event()
+    
+    def right_click_actions(self, event):
+        if (not self.is_flagged) and (not self.is_clicked):
+            self.btn_object.configure(
+            bg = 'orange',
+            text = "?",
+            font = tkFont.Font(family='Helvetica', size=10, weight='bold')
+            )
+            self.is_flagged = True
+        elif (self.is_flagged) and (not self.is_clicked):
+            self.is_flagged = False
+            self.btn_object.configure(
+            bg = 'SystemButtonFace',
+            text = ""
+            ) 
+
     def display_mine(self):
         # interrupt the game and display that player lost
         self.btn_object.configure(
@@ -50,6 +92,47 @@ class Cell:
             text = "!",
             font = tkFont.Font(family='Helvetica', size=10, weight='bold')
             )
+        #ctypes.windll.user32.MessageBoxW(0, 'Oops! You clicked on a mine :(', 'Game Over', 0)
+        self.game_over(False)
+    
+    def display_all_safe(self):
+        # display the safe neighbor cells when the clicked cell is 0
+        for cell in self.surrounding_neighbors:
+            cell.display_cell()
+
+    def display_cell(self):
+        if not self.is_clicked:
+            # display the number indicating number of mines surrounding the cell
+            self.btn_object.configure(
+                bg = 'grey',
+                text = f"{self.surrounding_mine_count}",
+                font = tkFont.Font(family='Helvetica', size=10, weight='bold')
+            )
+            # replace cell count with new count
+            Cell.cell_count -= 1
+            self.cell_count_lbl_object.configure(
+                text = f"{Cell.cell_count} cells left"
+            )
+        # mark as clicked
+        self.is_clicked = True
+        self.unbind_event()
+
+    def game_over(self, won):
+        if won:
+            msg = "You Win! " 
+            res = tkMessageBox.showinfo("Game Over", msg)           
+        else: 
+            msg = "You Lost! "
+            res = tkMessageBox.showinfo("Game Over", msg)
+        
+        sys.exit()
+    
+    def restart(self):
+        pass
+
+    def unbind_event(self):
+        self.btn_object.unbind('<Button-1>')
+        self.btn_object.unbind('<Button-3>')
     
     def get_cell_by_coordinates(self, x, y):
         # returns cell object based on x, y coordinates
@@ -82,32 +165,19 @@ class Cell:
                 count += 1
         return count
     
-    def display_all_safe(self):
-        # display the safe neighbor cells when the clicked cell is 0
-        for cell in self.surrounding_neighbors:
-            cell.display_cell()
-
-    def display_cell(self):
-        # display the number indicating number of mines surrounding the cell
-        self.btn_object.configure(
-            bg = 'grey',
-            text = f"{self.surrounding_mine_count}",
-            font = tkFont.Font(family='Helvetica', size=10, weight='bold')
-            )
-
-    def right_click_actions(self, event):
-        print(event)
-        print('Right Clicked')
     
     @staticmethod
-    def total_mine_count():
+    def difficulty_setting():
         if Cell.level == 0:
             Cell.mine_count = settings.BEGINNER_MINES_COUNT
+            Cell.cell_count = settings.BEGINNER_GRID_SIZE ** 2
         elif Cell.level == 1:
             Cell.mine_count = settings.INTERMEDIATE_MINES_COUNT
+            Cell.cell_count = settings.INTERMEDIATE_GRID_SIZE ** 2
         elif Cell.level == 2:
             Cell.mine_count = settings.EXPERT_MINES_COUNT
-        return Cell.mine_count
+            Cell.cell_count = settings.EXPERT_HEIGHT * settings.EXPERT_WIDTH
+        return Cell.mine_count, Cell.cell_count
 
     @staticmethod #method belongs to the class not each individual instance
     def randomize_mines():
