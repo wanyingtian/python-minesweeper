@@ -55,20 +55,17 @@ class Cell:
         Cell.cell_count_lbl_object = lbl
     
     def left_click_actions(self, event):
-        if not self.is_clicked:
-            if self.is_mine:
-                self.display_mine()
-            else:
-                if self.surrounding_mine_count == 0:
-                    self.display_all_safe()
-                self.display_cell()
-
-                if Cell.cell_count == Cell.mine_count:
-                    #show game won
-                    #ctypes.windll.user32.MessageBoxW(0, 'You Won!', 'You Won', 0)
-                    self.game_over(True)
+        
+        if self.is_mine:
+            self.display_mine()
         else:
-            self.unbind_event()
+            self.display_cell()
+
+            if Cell.cell_count == Cell.mine_count:
+                #show game won
+                #ctypes.windll.user32.MessageBoxW(0, 'You Won!', 'You Won', 0)
+                self.game_over(True)
+
     
     def right_click_actions(self, event):
         if (not self.is_flagged) and (not self.is_clicked):
@@ -95,10 +92,12 @@ class Cell:
         #ctypes.windll.user32.MessageBoxW(0, 'Oops! You clicked on a mine :(', 'Game Over', 0)
         self.game_over(False)
     
-    def display_all_safe(self):
+    def display_neighbors(self):
         # display the safe neighbor cells when the clicked cell is 0
+        #self.display_cell()
         for cell in self.surrounding_neighbors:
             cell.display_cell()
+
 
     def display_cell(self):
         if not self.is_clicked:
@@ -113,9 +112,15 @@ class Cell:
             self.cell_count_lbl_object.configure(
                 text = f"{Cell.cell_count} cells left"
             )
-        # mark as clicked
-        self.is_clicked = True
-        self.unbind_event()
+            # mark as clicked
+            self.is_clicked = True
+            self.unbind_event()
+
+            # if count is 0, display surrounding
+            if self.surrounding_mine_count == 0:
+                self.display_neighbors()
+
+
 
     def game_over(self, won):
         if won:
