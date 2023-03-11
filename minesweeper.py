@@ -80,9 +80,9 @@ def construct_cells(difficulty):
             Grid.columnconfigure(center_frame, y, weight=1)
             c = Cell(x, y, difficulty)
             c.create_btn_object(center_frame)
-            c.btn_object.grid(column = x, row = y, padx = 2, pady =2,sticky = N+S+E+W) 
+            c.btn_object.grid(column = x, row = y, padx = 1, pady =1,sticky = N+S+E+W) 
 
-difficulty = 1
+difficulty = 0
 construct_cells(difficulty)
 Cell.randomize_mines()
 #Create cell count label from Cell Class

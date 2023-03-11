@@ -3,6 +3,7 @@ from tkinter import Button
 from tkinter import font as tkFont
 from tkinter import Label
 from tkinter import messagebox as tkMessageBox
+from tkinter import PhotoImage
 import random
 import settings
 import ctypes
@@ -16,6 +17,7 @@ class Cell:
     #default beginner level
     mine_count = 0
     cell_count = 0
+    
 
     def __init__(self, x, y, level, is_mine = False):
         self.is_mine = is_mine
@@ -24,6 +26,7 @@ class Cell:
         self.btn_object = None
         self.x = x
         self.y = y
+        self.i = PhotoImage(width=1, height=1)
        
         Cell.level = level
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
@@ -32,11 +35,14 @@ class Cell:
         Cell.all.append(self)
 
     def create_btn_object(self, frame_location):
+        
         btn = Button(
             frame_location,
+            image = self.i,
+            compound = 'c',
             relief = 'sunken',
-            width = 2,
-            height = 1
+            width = 10,
+            height = 10
         )
         # assign event to the button
         btn.bind('<Button-1>', self.left_click_actions) #left click

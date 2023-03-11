@@ -6,7 +6,7 @@ a simple minesweeper game GUI with tkinter
 ### Level of difficulty
 * Beginner (8x8  board containing 10 mines) 
 * Intermediate (16x16 board with 40 mines)    
-* Expert (30x16 board with 99 mines) 
+* Expert (22x22 board with 100 mines) 
 
 ## Project Progress
 
