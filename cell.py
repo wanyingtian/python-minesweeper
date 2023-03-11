@@ -17,6 +17,7 @@ class Cell:
     #default beginner level
     mine_count = 0
     cell_count = 0
+    playing = True
     
 
     def __init__(self, x, y, level, is_mine = False):
@@ -27,10 +28,12 @@ class Cell:
         self.x = x
         self.y = y
         self.i = PhotoImage(width=1, height=1)
+
        
         Cell.level = level
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
         Cell.cell_count_lbl_object = None
+        Cell.mine_count_lbl_object = None
         #Append the object to the Cell.all list
         Cell.all.append(self)
 
@@ -55,18 +58,30 @@ class Cell:
             frame_location,
             bg = 'brown',
             fg = 'white',
-            font = tkFont.Font(family='Helvetica', size=12),
+            font = tkFont.Font(family='Helvetica', size=10),
             text = f"{Cell.cell_count} cells left"
         )
         Cell.cell_count_lbl_object = lbl
+    
+    @staticmethod
+    def create_mine_count_label(frame_location):
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=10),
+            text = f"{Cell.mine_count} mines total"
+        )
+        Cell.mine_count_lbl_object = lbl
+
     
     def left_click_actions(self, event):
         
         if self.is_mine:
             self.display_mine()
+            self.game_over(False)
         else:
             self.display_cell()
-
             if Cell.cell_count == Cell.mine_count:
                 #show game won
                 #ctypes.windll.user32.MessageBoxW(0, 'You Won!', 'You Won', 0)
@@ -95,8 +110,7 @@ class Cell:
             text = "!",
             font = tkFont.Font(family='Helvetica', size=10, weight='bold')
             )
-        #ctypes.windll.user32.MessageBoxW(0, 'Oops! You clicked on a mine :(', 'Game Over', 0)
-        self.game_over(False)
+
     
     def display_neighbors(self):
         # display the safe neighbor cells when the clicked cell is 0
@@ -131,11 +145,13 @@ class Cell:
     def game_over(self, won):
         if won:
             msg = "You Win! " 
-            res = tkMessageBox.showinfo("Game Over", msg)           
+            res = tkMessageBox.showinfo("Game Over", msg)
+                # create window        
         else: 
             msg = "You Lost! "
             res = tkMessageBox.showinfo("Game Over", msg)
         #self.center_frame.destroy()
+        self.playing = False
         sys.exit()
         
     
