@@ -35,7 +35,7 @@ class Cell:
         Cell.all.append(self)
 
     def create_btn_object(self, frame_location):
-        
+        self.center_frame = frame_location
         btn = Button(
             frame_location,
             image = self.i,
@@ -135,8 +135,9 @@ class Cell:
         else: 
             msg = "You Lost! "
             res = tkMessageBox.showinfo("Game Over", msg)
-        
+        #self.center_frame.destroy()
         sys.exit()
+        
     
     def restart(self):
         pass
