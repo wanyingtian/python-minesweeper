@@ -26,15 +26,7 @@ top_frame = Frame(
 )
 top_frame.place(x = 0, y = 0) # where the top left frame starts
 #top_frame.grid(column = 0, row = 0,sticky=N)
-'''
-left_frame = Frame(
-    root,
-    bg = 'tan',
-    width= utils.width_percentage(20),
-    height = utils.height_percentage(100)    
-)
-left_frame.place(x = 0, y = utils.height_percentage(20))
-'''
+
 center_frame = Frame(
     root,
     bg = 'beige',
@@ -50,13 +42,15 @@ game_title = Label(
     bg = 'brown',
     fg = 'white',
     text ="Chris's Minesweeper Game" ,
-    font = ('Calibri',24)
+    font = ('Calibri',18)
 )
 
 game_title.place(
     x = utils.width_percentage(25),
     y = utils.width_percentage(5)
 )
+
+
 
 '''
 Creating Cells and Mines
