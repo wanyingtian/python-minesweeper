@@ -6,7 +6,7 @@ from tkinter import messagebox as tkMessageBox
 from tkinter import PhotoImage
 import random
 import settings
-import ctypes
+import utils
 import sys
 
 
@@ -17,7 +17,7 @@ class Cell:
     #default beginner level
     mine_count = 0
     cell_count = 0
-    playing = True
+
     
 
     def __init__(self, x, y, level, is_mine = False):
@@ -28,7 +28,6 @@ class Cell:
         self.x = x
         self.y = y
         self.i = PhotoImage(width=1, height=1)
-
        
         Cell.level = level
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
@@ -80,12 +79,14 @@ class Cell:
         if self.is_mine:
             self.display_mine()
             self.game_over(False)
+            return False
         else:
             self.display_cell()
             if Cell.cell_count == Cell.mine_count:
                 #show game won
                 #ctypes.windll.user32.MessageBoxW(0, 'You Won!', 'You Won', 0)
                 self.game_over(True)
+                return False        
 
     
     def right_click_actions(self, event):
@@ -110,14 +111,12 @@ class Cell:
             text = "!",
             font = tkFont.Font(family='Helvetica', size=10, weight='bold')
             )
-
     
     def display_neighbors(self):
         # display the safe neighbor cells when the clicked cell is 0
         #self.display_cell()
         for cell in self.surrounding_neighbors:
             cell.display_cell()
-
 
     def display_cell(self):
         if not self.is_clicked:
@@ -140,24 +139,46 @@ class Cell:
             if self.surrounding_mine_count == 0:
                 self.display_neighbors()
 
-
-
     def game_over(self, won):
         if won:
-            msg = "You Win! " 
-            res = tkMessageBox.showinfo("Game Over", msg)
+            msg = "You Win! Play again? " 
+            res = tkMessageBox.askyesno("Game Over", msg)
                 # create window        
         else: 
-            msg = "You Lost! "
-            res = tkMessageBox.showinfo("Game Over", msg)
-        #self.center_frame.destroy()
-        self.playing = False
-        sys.exit()
-        
+            msg = "You Lost! Play again?"
+            res = tkMessageBox.askyesno("Game Over", msg)
+        if res:
+            self.restart()
+        else:
+            sys.exit()        
     
     def restart(self):
-        pass
+        for cell in Cell.all:
+            cell.unbind_event()
+            del cell
+        Cell.all = [] 
+        Cell.mine_count = 0
+        Cell.cell_count = 0
+        #self.center_frame.destroy()
+        self.restart_msg = Label(
+            self.center_frame,
+            bg = 'brown',
+            fg = 'white',
+            text =
+            """
 
+            Click any level to restart the game!          
+
+            """,
+            font = ('Calibri',18)
+        )
+        self.restart_msg.place(
+            relwidth = 0.8,
+            relheight = 0.4,
+            x = utils.width_percentage(10),
+            y = utils.height_percentage(20)
+        )
+        
     def unbind_event(self):
         self.btn_object.unbind('<Button-1>')
         self.btn_object.unbind('<Button-3>')
