@@ -4,20 +4,18 @@ import settings
 import utils
 
 root = Tk() # create window
-'''
-GUI Window and Frames:
-There will be 3 main frames, 
-one on top for the title, 
-one on the left as a side bar, 
-and one in the center for the mine grid
-'''
-
 root.configure(bg = "beige")
 root.geometry(f'{settings.WIDTH}x{settings.HEIGHT}') # window size width x height
 root.title("Chris's Minesweeper Game")
 # to avoid resize window, uncomment line below
 root.resizable(False,False)
-
+  
+'''
+GUI Window and Frames:
+There will be 2 main frames, 
+one on top for the title, 
+and one in the center for the mine grid
+'''
 top_frame = Frame(
     root,
     bg = 'brown',

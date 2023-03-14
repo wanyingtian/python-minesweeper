@@ -22,6 +22,6 @@ a simple minesweeper game GUI with tkinter
   - [x] Show remaining cells
   - [ ] Show timer
 - [ ] Extra touches
-  - [ ] Add difficulty levels
-  - [ ] Restart option
+  - [x] Add difficulty levels
+  - [x] Restart option
   - [ ] Display optimization 
