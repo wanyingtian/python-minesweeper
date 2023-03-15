@@ -4,12 +4,6 @@ from cell import Cell
 import settings
 import utils
 
-'''
-Creating Cells and Mines
-Create a cell class in cell.py that can build cells with clickable buttons
-the cell button objects would also have actions when left or right clicked
-'''
-
 
 class Game:
 
@@ -27,7 +21,6 @@ class Game:
         Cell.cell_count_lbl_object.place(x = 5, y = 10)
         Cell.create_mine_count_label(self.top_frame)
         Cell.mine_count_lbl_object.place(x = 5, y = 30)
-
 
     def reset(self):
         self.center_frame.destroy()
@@ -53,7 +46,7 @@ class Game:
                 c.btn_object.grid(column = x, row = y, padx = 1, pady =1,sticky = N+S+E+W)
         
     def beginner(self):
-        msg = "Want to restart at Beginner level? " 
+        msg = "Want to start at Beginner level? " 
         res = tkMessageBox.askyesno("Restart", msg)
         if res:
             self.difficulty = 0
@@ -63,7 +56,7 @@ class Game:
             pass
 
     def intermediate(self):
-        msg = "Want to restart at Intermediate level? " 
+        msg = "Want to start at Intermediate level? " 
         res = tkMessageBox.askyesno("Restart", msg)
         if res:
             self.difficulty = 1
@@ -73,7 +66,7 @@ class Game:
             pass
         
     def expert(self):
-        msg = "Want to restart at Expert level? " 
+        msg = "Want to start at Expert level? " 
         res = tkMessageBox.askyesno("Restart", msg)
         if res:
             self.difficulty = 2
@@ -117,9 +110,24 @@ class Game:
             y = utils.height_percentage(5)
         )
 
-        level0 = Button(self.top_frame, text = "Beginner", command = self.beginner)
-        level1 = Button(self.top_frame, text = "Intermediate", command = self.intermediate)
-        level2 = Button(self.top_frame, text = "Expert", command = self.expert)
+        level0 = Button(
+            self.top_frame, 
+            text = "Beginner", 
+            font = ('Helvetica', 10, 'bold'),
+            command = self.beginner
+            )
+        level1 = Button(
+            self.top_frame, 
+            text = "Intermediate",
+            font = ('Helvetica', 10, 'bold'), 
+            command = self.intermediate
+            )
+        level2 = Button(
+            self.top_frame, 
+            text = "Expert", 
+            font = ('Helvetica', 10, 'bold'),
+            command = self.expert
+            )
 
         level0.place(x = utils.width_percentage(20), y = utils.height_percentage(15))
         level1.place(x = utils.width_percentage(40), y = utils.height_percentage(15))
@@ -131,10 +139,8 @@ def main():
     root = Tk()
     # build game window
     g = Game(root) 
-
     # Run the window
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()
