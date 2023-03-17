@@ -1,7 +1,8 @@
 # python-minesweeper
 a simple minesweeper game GUI with tkinter
 
-* inspired by tutorial <https://medium.com/swlh/this-is-how-to-create-a-simple-minesweeper-game-in-python-af02077a8de>
+## Gettiing Started
+1. 
 
 ### Level of difficulty
 * Beginner (8x8  board containing 10 mines) 
