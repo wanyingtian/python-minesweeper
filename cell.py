@@ -33,6 +33,7 @@ class Cell:
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
         Cell.cell_count_lbl_object = None
         Cell.mine_count_lbl_object = None
+        Cell.playing = True
         #Append the object to the Cell.all list
         Cell.all.append(self)
 
@@ -154,12 +155,12 @@ class Cell:
     
     def restart(self):
         for cell in Cell.all:
-            cell.unbind_event()
             del cell
         Cell.all = [] 
         Cell.mine_count = 0
         Cell.cell_count = 0
-        #self.center_frame.destroy()
+        Cell.playing = False
+        
         self.restart_msg = Label(
             self.center_frame,
             bg = 'brown',

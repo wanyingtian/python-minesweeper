@@ -24,6 +24,11 @@ class Game:
 
     def reset(self):
         self.center_frame.destroy()
+        for cell in Cell.all:
+            del cell
+        Cell.all = [] 
+        Cell.mine_count = 0
+        Cell.cell_count = 0
         self.setup()
   
     def construct_cells(self):
@@ -46,6 +51,7 @@ class Game:
                 c.btn_object.grid(column = x, row = y, padx = 1, pady =1,sticky = N+S+E+W)
         
     def beginner(self):
+
         msg = "Want to start at Beginner level? " 
         res = tkMessageBox.askyesno("Restart", msg)
         if res:
@@ -54,6 +60,7 @@ class Game:
             self.reset()
         else:
             pass
+
 
     def intermediate(self):
         msg = "Want to start at Intermediate level? " 
