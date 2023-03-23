@@ -21,6 +21,8 @@ class Game:
         Cell.cell_count_lbl_object.place(x = 5, y = 10)
         Cell.create_mine_count_label(self.top_frame)
         Cell.mine_count_lbl_object.place(x = 5, y = 30)
+        Cell.create_flag_count_label(self.top_frame)
+        Cell.flag_count_lbl_object.place(x = 5, y = 50)
 
     def reset(self):
         self.center_frame.destroy()
@@ -29,6 +31,7 @@ class Game:
         Cell.all = [] 
         Cell.mine_count = 0
         Cell.cell_count = 0
+        Cell.flag_count = 0
         self.setup()
   
     def construct_cells(self):
@@ -113,7 +116,7 @@ class Game:
             font = ('Calibri',18)
         )
         self.game_title.place(
-            x = utils.width_percentage(20),
+            x = utils.width_percentage(25),
             y = utils.height_percentage(5)
         )
 
@@ -136,9 +139,9 @@ class Game:
             command = self.expert
             )
 
-        level0.place(x = utils.width_percentage(20), y = utils.height_percentage(15))
-        level1.place(x = utils.width_percentage(40), y = utils.height_percentage(15))
-        level2.place(x = utils.width_percentage(65), y = utils.height_percentage(15))
+        level0.place(x = utils.width_percentage(25), y = utils.height_percentage(15))
+        level1.place(x = utils.width_percentage(45), y = utils.height_percentage(15))
+        level2.place(x = utils.width_percentage(70), y = utils.height_percentage(15))
 ### End of Game Class
 
 def main():

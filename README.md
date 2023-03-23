@@ -17,12 +17,12 @@ a simple minesweeper game GUI with tkinter
   - [x] Label each cell with identifiers
   - [x] Randomize mines
   - [x] Label mine surrounding cells with counts
-- [ ] Display game data
+- [x] Display game data
   - [x] Display reactions after clicks
   - [x] Right-click Flags
   - [x] Show remaining cells
-  - [ ] Show timer
-- [ ] Extra touches
+  - [x] Show flag count
+- [x] Extra touches
   - [x] Add difficulty levels
   - [x] Restart option
-  - [ ] Display optimization 
+  - [x] Display optimization 

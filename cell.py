@@ -17,6 +17,7 @@ class Cell:
     #default beginner level
     mine_count = 0
     cell_count = 0
+    flag_count = 0
 
     
 
@@ -33,6 +34,7 @@ class Cell:
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
         Cell.cell_count_lbl_object = None
         Cell.mine_count_lbl_object = None
+        Cell.flag_count_lbl_object = None
         Cell.playing = True
         #Append the object to the Cell.all list
         Cell.all.append(self)
@@ -70,10 +72,20 @@ class Cell:
             bg = 'brown',
             fg = 'white',
             font = tkFont.Font(family='Helvetica', size=10),
-            text = f"{Cell.mine_count} mines total"
+            text = f"Total mines:{Cell.mine_count}"
         )
         Cell.mine_count_lbl_object = lbl
 
+    @staticmethod
+    def create_flag_count_label(frame_location):
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=10),
+            text = f"Flags: {Cell.flag_count}"
+        )
+        Cell.flag_count_lbl_object = lbl
     
     def left_click_actions(self, event):
         
@@ -98,12 +110,21 @@ class Cell:
             font = tkFont.Font(family='Helvetica', size=10, weight='bold')
             )
             self.is_flagged = True
+            Cell.flag_count += 1
+            self.flag_count_lbl_object.configure(
+                text = f"Flags: {Cell.flag_count}"
+                )
         elif (self.is_flagged) and (not self.is_clicked):
             self.is_flagged = False
             self.btn_object.configure(
             bg = 'SystemButtonFace',
             text = ""
             ) 
+            Cell.flag_count -= 1
+            self.flag_count_lbl_object.configure(
+                text = f"Flags: {Cell.flag_count}"
+                )
+
 
     def display_mine(self):
         # interrupt the game and display that player lost
@@ -135,7 +156,12 @@ class Cell:
             # mark as clicked
             self.is_clicked = True
             self.unbind_event()
-
+            if self.is_flagged:
+                Cell.flag_count -= 1
+                self.flag_count_lbl_object.configure(
+                text = f"Flags: {Cell.flag_count}"
+                )
+                self.is_flagged = False
             # if count is 0, display surrounding
             if self.surrounding_mine_count == 0:
                 self.display_neighbors()
@@ -159,6 +185,7 @@ class Cell:
         Cell.all = [] 
         Cell.mine_count = 0
         Cell.cell_count = 0
+        Cell.flag_count = 0
         Cell.playing = False
         
         self.restart_msg = Label(
