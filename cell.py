@@ -168,7 +168,7 @@ class Cell:
 
     def game_over(self, won):
         if won:
-            msg = "You Win! Play again? " 
+            msg = "Congrats You Won! Play again? " 
             res = tkMessageBox.askyesno("Game Over", msg)
                 # create window        
         else: 
