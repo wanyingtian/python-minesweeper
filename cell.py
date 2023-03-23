@@ -14,29 +14,28 @@ import sys
 
 class Cell:
     all = [] #a class attribute that will containn all objects
-    #default beginner level
     mine_count = 0
     cell_count = 0
     flag_count = 0
 
-    
-
     def __init__(self, x, y, level, is_mine = False):
+        # initialize each button/cell given coordinates
         self.is_mine = is_mine
         self.is_clicked = False
         self.is_flagged = False
         self.btn_object = None
         self.x = x
         self.y = y
-        self.i = PhotoImage(width=1, height=1)
+        self.i = PhotoImage(width=1, height=1) # make the buttons square using a blank image
        
+        #initialize game settings       
         Cell.level = level
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
         Cell.cell_count_lbl_object = None
         Cell.mine_count_lbl_object = None
         Cell.flag_count_lbl_object = None
         Cell.playing = True
-        #Append the object to the Cell.all list
+        #Append the object/cell to the Cell.all list
         Cell.all.append(self)
 
     def create_btn_object(self, frame_location):
@@ -56,6 +55,7 @@ class Cell:
     
     @staticmethod
     def create_cell_count_label(frame_location):
+        # counts # of cells left
         lbl = Label(
             frame_location,
             bg = 'brown',
@@ -67,6 +67,7 @@ class Cell:
     
     @staticmethod
     def create_mine_count_label(frame_location):
+        # display total mines
         lbl = Label(
             frame_location,
             bg = 'brown',
@@ -78,6 +79,7 @@ class Cell:
 
     @staticmethod
     def create_flag_count_label(frame_location):
+        # counts number of flags
         lbl = Label(
             frame_location,
             bg = 'brown',
@@ -88,21 +90,21 @@ class Cell:
         Cell.flag_count_lbl_object = lbl
     
     def left_click_actions(self, event):
-        
+        # display cell/mine
         if self.is_mine:
             self.display_mine()
+            # show game lost
             self.game_over(False)
             return False
         else:
             self.display_cell()
             if Cell.cell_count == Cell.mine_count:
                 #show game won
-                #ctypes.windll.user32.MessageBoxW(0, 'You Won!', 'You Won', 0)
                 self.game_over(True)
                 return False        
-
-    
+  
     def right_click_actions(self, event):
+        # flag/unflag cells
         if (not self.is_flagged) and (not self.is_clicked):
             self.btn_object.configure(
             bg = 'orange',
@@ -134,12 +136,6 @@ class Cell:
             font = tkFont.Font(family='Helvetica', size=10, weight='bold')
             )
     
-    def display_neighbors(self):
-        # display the safe neighbor cells when the clicked cell is 0
-        #self.display_cell()
-        for cell in self.surrounding_neighbors:
-            cell.display_cell()
-
     def display_cell(self):
         if not self.is_clicked:
             # display the number indicating number of mines surrounding the cell
@@ -166,13 +162,19 @@ class Cell:
             if self.surrounding_mine_count == 0:
                 self.display_neighbors()
 
+    def display_neighbors(self):
+        # display the safe neighboring cells when the clicked cell is 0
+        for cell in self.surrounding_neighbors:
+            cell.display_cell()
+
     def game_over(self, won):
+        # display win/lose message and ask if restart
         if won:
-            msg = "Congrats You Won! Play again? " 
+            msg = "Congrats! You Won! Play again? " 
             res = tkMessageBox.askyesno("Game Over", msg)
                 # create window        
         else: 
-            msg = "You Lost! Play again?"
+            msg = "You Lost :( Play again?"
             res = tkMessageBox.askyesno("Game Over", msg)
         if res:
             self.restart()
@@ -180,6 +182,7 @@ class Cell:
             sys.exit()        
     
     def restart(self):
+        # delete cells and zero all values, 
         for cell in Cell.all:
             del cell
         Cell.all = [] 
@@ -187,7 +190,8 @@ class Cell:
         Cell.cell_count = 0
         Cell.flag_count = 0
         Cell.playing = False
-        
+
+        # ask for user selection for difficulty
         self.restart_msg = Label(
             self.center_frame,
             bg = 'brown',
@@ -236,15 +240,16 @@ class Cell:
 
     @property
     def surrounding_mine_count(self):
+        # return count of surrounding mines
         count = 0
         for neighbor in self.surrounding_neighbors:
             if neighbor.is_mine:
                 count += 1
         return count
-    
-    
+       
     @staticmethod
     def difficulty_setting():
+        # define number of cells and mines based on difficulty
         if Cell.level == 0:
             Cell.mine_count = settings.BEGINNER_MINES_COUNT
             Cell.cell_count = settings.BEGINNER_GRID_SIZE ** 2
@@ -256,7 +261,7 @@ class Cell:
             Cell.cell_count = settings.EXPERT_HEIGHT * settings.EXPERT_WIDTH
         return Cell.mine_count, Cell.cell_count
 
-    @staticmethod #method belongs to the class not each individual instance
+    @staticmethod 
     def randomize_mines():
         picked_cells = random.sample(Cell.all, Cell.mine_count)
         for picked_cell in picked_cells:
