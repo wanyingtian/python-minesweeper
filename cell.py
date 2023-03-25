@@ -8,15 +8,14 @@ import random
 import settings
 import utils
 import sys
+import time
+from datetime import time, date, datetime
 
 
 
 
 class Cell:
     all = [] #a class attribute that will containn all objects
-    mine_count = 0
-    cell_count = 0
-    flag_count = 0
 
     def __init__(self, x, y, level, is_mine = False):
         # initialize each button/cell given coordinates
@@ -31,9 +30,13 @@ class Cell:
         #initialize game settings       
         Cell.level = level
         Cell.mine_count, Cell.cell_count = Cell.difficulty_setting()
+        Cell.flag_count = 0
         Cell.cell_count_lbl_object = None
         Cell.mine_count_lbl_object = None
         Cell.flag_count_lbl_object = None
+        Cell.timer_lbl_object = None
+        Cell.start_time = None
+        Cell.ts = '00:00:00'
         Cell.playing = True
         #Append the object/cell to the Cell.all list
         Cell.all.append(self)
@@ -52,58 +55,29 @@ class Cell:
         btn.bind('<Button-1>', self.left_click_actions) #left click
         btn.bind('<Button-3>', self.right_click_actions) # right click
         self.btn_object = btn
-    
-    @staticmethod
-    def create_cell_count_label(frame_location):
-        # counts # of cells left
-        lbl = Label(
-            frame_location,
-            bg = 'brown',
-            fg = 'white',
-            font = tkFont.Font(family='Helvetica', size=10),
-            text = f"{Cell.cell_count} cells left"
-        )
-        Cell.cell_count_lbl_object = lbl
-    
-    @staticmethod
-    def create_mine_count_label(frame_location):
-        # display total mines
-        lbl = Label(
-            frame_location,
-            bg = 'brown',
-            fg = 'white',
-            font = tkFont.Font(family='Helvetica', size=10),
-            text = f"Total mines:{Cell.mine_count}"
-        )
-        Cell.mine_count_lbl_object = lbl
 
-    @staticmethod
-    def create_flag_count_label(frame_location):
-        # counts number of flags
-        lbl = Label(
-            frame_location,
-            bg = 'brown',
-            fg = 'white',
-            font = tkFont.Font(family='Helvetica', size=10),
-            text = f"Flags: {Cell.flag_count}"
-        )
-        Cell.flag_count_lbl_object = lbl
-    
     def left_click_actions(self, event):
+        # start timer if not already
+        if Cell.start_time == None:
+            Cell.start_time = datetime.now()
+            Cell.update_timer()
         # display cell/mine
         if self.is_mine:
-            self.display_mine()
-            # show game lost
-            self.game_over(False)
-            return False
+            Cell.playing = False
+            self.display_mine() #show mine
+            self.game_over(False) # show game lost
         else:
             self.display_cell()
-            if Cell.cell_count == Cell.mine_count:
-                #show game won
-                self.game_over(True)
-                return False        
+            # win if leftover cells are all mines
+            if Cell.cell_count == Cell.mine_count:                
+                Cell.playing = False #playing stopped
+                self.game_over(True) #show game won                 
   
     def right_click_actions(self, event):
+        # start timer if not already
+        if Cell.start_time == None:
+            Cell.start_time = datetime.now()
+            Cell.update_timer()
         # flag/unflag cells
         if (not self.is_flagged) and (not self.is_clicked):
             self.btn_object.configure(
@@ -127,9 +101,7 @@ class Cell:
                 text = f"Flags: {Cell.flag_count}"
                 )
 
-
     def display_mine(self):
-        # interrupt the game and display that player lost
         self.btn_object.configure(
             bg = 'red',
             text = "!",
@@ -170,9 +142,12 @@ class Cell:
     def game_over(self, won):
         # display win/lose message and ask if restart
         if won:
-            msg = "Congrats! You Won! Play again? " 
-            res = tkMessageBox.askyesno("Game Over", msg)
-                # create window        
+            msg = f"""  
+            You won! 
+            Time used: {Cell.ts}
+            Play again?
+            """
+            res = tkMessageBox.askyesno("Game Over", msg)        
         else: 
             msg = "You Lost :( Play again?"
             res = tkMessageBox.askyesno("Game Over", msg)
@@ -246,7 +221,66 @@ class Cell:
             if neighbor.is_mine:
                 count += 1
         return count
-       
+    
+    @staticmethod
+    def create_cell_count_label(frame_location):
+        # counts # of cells left
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=10),
+            text = f"{Cell.cell_count} cells left"
+        )
+        Cell.cell_count_lbl_object = lbl
+    
+    @staticmethod
+    def create_mine_count_label(frame_location):
+        # display total mines
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=10),
+            text = f"Total mines:{Cell.mine_count}"
+        )
+        Cell.mine_count_lbl_object = lbl
+
+    @staticmethod
+    def create_flag_count_label(frame_location):
+        # counts number of flags
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=10),
+            text = f"Flags: {Cell.flag_count}"
+        )
+        Cell.flag_count_lbl_object = lbl
+    
+    @staticmethod
+    def create_timer_label(frame_location):
+        lbl = Label(
+            frame_location,
+            bg = 'brown',
+            fg = 'white',
+            font = tkFont.Font(family='Helvetica', size=10),
+            text = f"Timer: 00:00:00"
+        )
+        Cell.timer_lbl_object = lbl
+
+    @staticmethod
+    def update_timer():
+        if Cell.start_time == None or Cell.playing == False:
+            pass
+        elif Cell.start_time != None:
+            delta = datetime.now() - Cell.start_time
+            Cell.ts = str(delta).split('.')[0] # drop ms
+            if delta.total_seconds() < 36000:
+                Cell.ts = "0" + Cell.ts # zero-pad
+        Cell.timer_lbl_object.config(text = f"Timer: {Cell.ts}")
+        Cell.timer_lbl_object.after(100, Cell.update_timer)
+   
     @staticmethod
     def difficulty_setting():
         # define number of cells and mines based on difficulty

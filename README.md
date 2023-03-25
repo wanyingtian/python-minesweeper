@@ -22,6 +22,7 @@ a simple minesweeper game GUI with tkinter
   - [x] Right-click Flags
   - [x] Show remaining cells
   - [x] Show flag count
+  - [x] Show timer
 - [x] Extra touches
   - [x] Add difficulty levels
   - [x] Restart option

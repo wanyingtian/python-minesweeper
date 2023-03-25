@@ -4,7 +4,6 @@ from cell import Cell # import Cell class
 import settings
 import utils
 
-
 class Game:
 
     def __init__(self, root):
@@ -23,6 +22,8 @@ class Game:
         Cell.mine_count_lbl_object.place(x = 5, y = 30)
         Cell.create_flag_count_label(self.top_frame) # number of flags
         Cell.flag_count_lbl_object.place(x = 5, y = 50)
+        Cell.create_timer_label(self.top_frame)
+        Cell.timer_lbl_object.place(x = 5, y = 70)
 
     def reset(self):
         self.center_frame.destroy()
@@ -54,7 +55,7 @@ class Game:
                 c = Cell(x, y, self.difficulty)
                 c.create_btn_object(self.center_frame)
                 c.btn_object.grid(column = x, row = y, padx = 1, pady =1,sticky = N+S+E+W)
-        
+
     def beginner(self):
         msg = "Want to start at Beginner level? " 
         res = tkMessageBox.askyesno("Restart", msg)
