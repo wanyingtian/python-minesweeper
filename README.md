@@ -2,7 +2,9 @@
 a simple minesweeper game GUI with tkinter
 
 ## Gettiing Started
-1. 
+1. Download folder
+2. Run multilevel_minesweeper.py
+3. Choose your level and play! (default beginner level)
 
 ### Level of difficulty
 * Beginner (8x8  board containing 10 mines) 
@@ -10,8 +12,7 @@ a simple minesweeper game GUI with tkinter
 * Expert (22x22 board with 100 mines) 
 
 ## Project Progress
-
-- [x] Getting started with GUI: a simple tkinter window, with 3 frames (title, sidebar, main)
+- [x] Getting started with GUI: a simple tkinter window, with 2 frames (top,  center)
 - [x] Create cells and mines
 - [x] Program minesweeper algorithms
   - [x] Label each cell with identifiers
